@@ -1,0 +1,37 @@
+version: "3"
+
+networks:
+  ask:
+
+services:
+
+  mysql:
+    container_name: ask-mysql
+    image: "${REGISTRY}zbk/mysql:1.4"
+    privileged: true
+    restart: always
+    hostname: ask-mysql
+    networks:
+      - ask
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./logs/mysql:/var/log/mysql
+      - ./backup:/var/backup
+    ports:
+      - "5306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_PASSWORD
+      MYSQL_DATABASE: cloud
+
+
+  # ssh:
+  #   container_name: ask-ssh
+  #   image: "${REGISTRY}zbk/ssh:1.0"
+  #   privileged: true
+  #   restart: always
+  #   hostname: ask-ssh
+  #   networks:
+  #     - ask
+  #   ports:
+  #     - "85:85"
+

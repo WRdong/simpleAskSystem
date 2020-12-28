@@ -1,0 +1,5 @@
+#!/bin/bash
+
+#每天一次，需要加入到 docker 宿主机的 crontab 中
+
+docker exec -i ask_mysql /bin/bash -c 'mysqldump -uroot -pcloudzbk --databases cloud | gzip > /var/backup/cloud_`date "+%Y%m%d"`.sql.gz'
