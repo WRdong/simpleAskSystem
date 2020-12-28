@@ -21,3 +21,17 @@ $router->get('/', function () use ($router) {
         'dateTime' => date('Y-m-d H:i:s'),
     ];
 });
+
+$router->get('/phpinfo', function () use ($router) {
+    if (config('app.debug')) {
+        phpinfo();
+    }
+});
+
+$router->group(['namespace' => 'Admin', 'prefix' => '/api/admin'], function () use ($router) {
+    $router->group(['namespace' => 'User', 'prefix' => 'user'], function() use ($router) {
+       $router->get('/', 'Lists@run');
+    });
+
+
+});
