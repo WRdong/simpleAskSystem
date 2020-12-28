@@ -14,5 +14,10 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return [
+        // 'lumen' => $router->app->version(),
+        'ver' => 'v1.0.0',
+        'clientIp' => $router->app->request->getClientIp(),
+        'dateTime' => date('Y-m-d H:i:s'),
+    ];
 });
