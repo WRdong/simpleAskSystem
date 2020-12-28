@@ -4,6 +4,44 @@ networks:
   ask:
 
 services:
+  web:
+    container_name: ask-php
+    image: "${REGISTRY}zbk/php:1.6-alpine"
+    privileged: true
+    restart: always
+    hostname: ask-php
+    networks:
+      - ask
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - ./web:/var/www/html
+      - ./conf/supervisor.d/:/etc/supervisor.d/
+      - ./conf/supervisord.conf.example:/etc/supervisord.conf.example
+      - ./logs/php/:/var/www/logs/
+    # ports:
+      # - "9001:9001"
+    environment:
+      HOST_IP: ${HOST_IP}
+
+  nginx:
+    container_name: ask-nginx
+    image: "${REGISTRY}zbk/nginx-api:1.1.1"
+    privileged: true
+    restart: always
+    hostname: ask-nginx
+    networks:
+      - ask
+    depends_on:
+      - web
+    volumes:
+      - ./conf/vhost:/usr/local/nginx/conf/vhost  
+      - ./web:/var/www/html
+      - ./logs/nginx:/var/www/logs
+    ports:
+      - "80:80"
+      - "81:81"
 
   mysql:
     container_name: ask-mysql
@@ -22,6 +60,18 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQL_PASSWORD
       MYSQL_DATABASE: cloud
+
+
+  redis:
+    container_name: ask-redis
+    image: "${REGISTRY}zbk/redis:1.1"
+    privileged: true
+    restart: always
+    hostname: ask-redis
+    networks:
+      - ask
+    volumes:
+      - ./data/redis:/data
 
 
   # ssh:
