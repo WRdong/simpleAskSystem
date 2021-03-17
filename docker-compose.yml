@@ -40,8 +40,8 @@ services:
       - ./web:/var/www/html
       - ./logs/nginx:/var/www/logs
     ports:
-      - "80:80"
-      - "81:81"
+      - "8080:80"
+      - "8081:81"
 
   mysql:
     container_name: ask-mysql

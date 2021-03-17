@@ -12,7 +12,7 @@ echo "memory_limit = 256M" >> $iniFile
 echo "post_max_size = 200M" >> $iniFile
 
 # Increase the upload_max_filesize
-echo "upload_max_filesize = 200M" >> $iniFile
+echo "upload_max_filesize = 20M" >> $iniFile
 
 echo -e "\n"
 echo 'opcache.enable=1' >> $iniFile
@@ -32,11 +32,11 @@ echo '' > /usr/local/etc/php/conf.d/docker-php-ext-redis.ini
 
 
 # chown -Rf www-data:www-data /var/www/html/license
-chown -Rf www-data:www-data /var/www/html/basic/storage/*
+chown -Rf www-data:www-data /var/www/html/api/storage/*
 
 # schedule
 crond
-echo '* * * * * php /var/www/html/basic/artisan schedule:run >> /dev/null 2>&1' >  /etc/crontabs/root
+echo '* * * * * php /var/www/html/api/artisan schedule:run >> /dev/null 2>&1' >  /etc/crontabs/root
 
 \cp -f /etc/supervisord.conf.example /etc/supervisord.conf
 supervisord -c /etc/supervisord.conf
