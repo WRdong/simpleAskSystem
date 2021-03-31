@@ -16,6 +16,8 @@ import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 
 import styles from './index.less';
 
+const mobileLogin = false;
+
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => (
@@ -79,16 +81,16 @@ const Login: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.lang}>{SelectLang && <SelectLang />}</div>
+      <div className={styles.lang}>{false && SelectLang && <SelectLang />}</div>
       <div className={styles.content}>
         <div className={styles.top}>
           <div className={styles.header}>
             <Link to="/">
               <img alt="logo" className={styles.logo} src="/logo.svg" />
-              <span className={styles.title}>Ant Design</span>
+              <span className={styles.title}>Q & A</span>
             </Link>
           </div>
-          <div className={styles.desc}>Ant Design 是西湖区最具影响力的 Web 设计规范</div>
+          <div className={styles.desc}>有问必答、有疑必释、有惑必解</div>
         </div>
 
         <div className={styles.main}>
@@ -124,6 +126,7 @@ const Login: React.FC = () => {
                   defaultMessage: '账户密码登录',
                 })}
               />
+              { mobileLogin &&
               <Tabs.TabPane
                 key="mobile"
                 tab={intl.formatMessage({
@@ -131,6 +134,7 @@ const Login: React.FC = () => {
                   defaultMessage: '手机号登录',
                 })}
               />
+               }
             </Tabs>
 
             {status === 'error' && loginType === 'account' && (
@@ -284,17 +288,20 @@ const Login: React.FC = () => {
                 style={{
                   float: 'right',
                 }}
+                onClick={() => message.warn(intl.formatMessage({id: 'none.lang', defaultMessage: "请联系管理员。"}))}
               >
                 <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
               </a>
             </div>
           </ProForm>
+          {mobileLogin &&
           <Space className={styles.other}>
             <FormattedMessage id="pages.login.loginWith" defaultMessage="其他登录方式" />
             <AlipayCircleOutlined className={styles.icon} />
             <TaobaoCircleOutlined className={styles.icon} />
             <WeiboCircleOutlined className={styles.icon} />
           </Space>
+          }
         </div>
       </div>
       <Footer />
