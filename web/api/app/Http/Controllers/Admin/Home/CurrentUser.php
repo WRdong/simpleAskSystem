@@ -29,9 +29,10 @@ class CurrentUser extends AdminController
             $ret = $logic->getUser('admin');
         } catch (LogicException $e) {
             $this->throwLogicException($e);
+        } catch (\Exception $e) {
+            $this->throwException($e);
         }
         $this->log('user', 'view', '查看 用户 admin 信息');
-        $ret['now'] = Carbon::now()->toDateTimeString();
         return $this->json($ret);
     }
 
