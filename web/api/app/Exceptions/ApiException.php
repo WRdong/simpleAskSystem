@@ -11,6 +11,7 @@
 
 namespace App\Exceptions;
 
+use App\Define\CodeMsg;
 use Exception;
 use App\Utils\Uuid;
 use Laravel\Lumen\Http\Request;
@@ -37,16 +38,16 @@ class ApiException extends Exception
      * @param int $httpCode
      * @param array $headers
      */
-    public function __construct(int $code, string $msg, $data = null, $showType = 0, $previous = null, $httpCode = 200, $headers = [])
+    public function __construct(int $code, $msg = null, $data = null, $showType = 0, $previous = null, $httpCode = 200, $headers = [])
     {
         $this->traceId = Uuid::uuid32();
         $this->code = $code;
-        $this->msg = $msg;
+        $this->setMsg($msg);
         $this->setData($data);
         $this->showType = $showType;
         $this->httpCode = $httpCode;
         $this->httpHeaders = $headers;
-        parent::__construct($msg, $code, $previous);
+        parent::__construct($this->msg, $code, $previous);
     }
 
     public function setCode(int $code)
@@ -55,9 +56,17 @@ class ApiException extends Exception
         return $this;
     }
 
-    public function setMsg(string $msg)
+    public function setMsg($msg)
     {
-        $this->msg = $msg;
+        if ($msg === null) {
+            $this->msg = CodeMsg::getMessage($this->code);
+        } elseif (is_string($msg)) {
+            $this->msg = $msg;
+        } elseif (is_array($msg)) {
+            $this->msg = CodeMsg::getMessage($this->code, $this->msg);
+        } else {
+            $this->msg = '';
+        }
         return $this;
     }
 
