@@ -47,7 +47,9 @@ class AdminController extends Controller
      */
     protected function json($data = [], $code = 0, $to_camel_case = true)
     {
-        if ($data && is_array($data) && $to_camel_case === true) {
+        if (empty($data) && is_array($data)) {
+            $data = new \stdClass();
+        } elseif ($data && is_array($data) && $to_camel_case === true) {
             $data = Arr::arrayKeyToCamelCase($data);
         }
         if (config('app.debug')) {
