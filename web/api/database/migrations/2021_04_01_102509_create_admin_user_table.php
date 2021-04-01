@@ -21,6 +21,7 @@ class CreateAdminUserTable extends Migration
             $table->string('key', 65)->default('')->comment('用户名和姓名的关键字搜索: username#name');
             $table->string('password', 50)->default('')->comment('密码');
             $table->string("phone", 20)->default('')->comment("联系电话");
+            $table->string("email", 50)->default('')->comment("email");
             $table->tinyInteger('type')->default('1')->comment('用户类型 1:普通用户，2:高级用户');
             $table->string('role_id')->default('')->comment('角色 ID');
             $table->string('avatar', 255)->default('')->comment('头像');
