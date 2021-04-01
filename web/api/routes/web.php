@@ -12,6 +12,7 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
+require_once 'admin.php';
 
 $router->get('/', function () use ($router) {
     return [
@@ -28,10 +29,3 @@ $router->get('/phpinfo', function () use ($router) {
     }
 });
 
-$router->group(['namespace' => 'Admin', 'prefix' => '/api/admin'], function () use ($router) {
-    $router->group(['namespace' => 'User', 'prefix' => 'user'], function() use ($router) {
-       $router->get('/', 'Lists@run');
-    });
-
-
-});
