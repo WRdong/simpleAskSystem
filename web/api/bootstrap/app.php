@@ -80,6 +80,8 @@ $app->configure('app');
 //     'auth' => App\Http\Middleware\Authenticate::class,
 // ]);
 
+//开启 sql log
+env('APP_DEBUG', false) && DB::enableQueryLog();
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
