@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\ApiException;
+use App\Exceptions\LogicException;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -30,5 +32,17 @@ class Controller extends BaseController
             return trim($data);
         }
         return $data;
+    }
+
+
+    /**
+     * 控制层 使用 ApiException 处理逻辑层异常
+     * @param LogicException $e
+     * @param int $showType
+     * @throws ApiException
+     */
+    protected function throwLogicException(LogicException $e, $showType = 0)
+    {
+        throw new ApiException($e->getCode(), $e->getMsg(), $e->getData(), $showType, $e);
     }
 }

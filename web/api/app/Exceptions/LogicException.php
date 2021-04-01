@@ -16,12 +16,19 @@ use Exception;
 class LogicException extends Exception
 {
 
+    protected $msg;
     protected $data;
 
     public function __construct(int $code, $msg = '', $data = null, $previous = null)
     {
+        $this->msg = $msg == '' ? null : $msg;
         $this->data = $data;
         parent::__construct($msg, $code, $previous);
+    }
+
+    public function getMsg()
+    {
+        return $this->msg;
     }
 
     public function getData()

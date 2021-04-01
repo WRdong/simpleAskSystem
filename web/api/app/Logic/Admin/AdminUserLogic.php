@@ -12,6 +12,7 @@
 namespace App\Logic\Admin;
 
 
+use App\Exceptions\LogicException;
 use App\Logic\AdminLogic;
 use App\Models\Admin\AdminUser;
 
