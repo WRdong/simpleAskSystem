@@ -11,8 +11,8 @@
 
 namespace App\Http\Controllers\Admin\Home;
 
-use App\Exceptions\ApiException;
 use App\Http\Controllers\Common\AdminController;
+use App\Logic\Admin\AdminUserLogic;
 
 class CurrentUser extends AdminController
 {
@@ -21,7 +21,9 @@ class CurrentUser extends AdminController
     public function run()
     {
         $params = $this->input();
-        throw new ApiException(2);
+        $logic = new AdminUserLogic();
+        $ret = $logic->getUser('admin');
+        return $this->json($ret);
     }
 
 }

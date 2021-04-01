@@ -15,4 +15,5 @@ namespace App\Logic;
 class AdminLogic extends Logic
 {
 
+
 }

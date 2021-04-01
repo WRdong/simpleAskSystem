@@ -13,8 +13,14 @@ namespace App\Logic\Admin;
 
 
 use App\Logic\AdminLogic;
+use App\Models\Admin\AdminUser;
 
 class AdminUserLogic extends AdminLogic
 {
 
+    public function getUser($id)
+    {
+        $user = AdminUser::find($id);
+        return  $user ? $user->toArray() : [];
+    }
 }
