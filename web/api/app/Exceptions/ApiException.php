@@ -14,7 +14,6 @@ namespace App\Exceptions;
 use Exception;
 use App\Utils\Uuid;
 use Laravel\Lumen\Http\Request;
-use Psr\Log\LoggerInterface;
 
 class ApiException extends Exception
 {
