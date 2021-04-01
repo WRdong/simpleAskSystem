@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-class CreateUserTable extends Migration
+class CreateAdminUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class CreateUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('user', function (Blueprint $table) {
+        Schema::create('admin_user', function (Blueprint $table) {
             $table->string('id', 36)->comment('主键 ID');
             $table->string('username', 40)->default('')->comment('用户名');
             $table->string('name', 50)->default('')->comment('姓名');
@@ -22,6 +22,7 @@ class CreateUserTable extends Migration
             $table->string('password', 50)->default('')->comment('密码');
             $table->string("phone", 20)->default('')->comment("联系电话");
             $table->tinyInteger('type')->default('1')->comment('用户类型 1:普通用户，2:高级用户');
+            $table->string('role_id')->default('')->comment('角色 ID');
             $table->string('avatar', 255)->default('')->comment('头像');
             $table->string('signature', 255)->default('')->comment('个性签名');
             $table->string('title', 30)->default('')->comment('头衔');
@@ -45,7 +46,14 @@ class CreateUserTable extends Migration
             $table->index('last_login_ip', 'idx_last_login_ip');
             $table->index('created_at', 'idx_created_at');
         });
+        try {
+            $this->seed();
+        } catch (\Exception $e) {
+            $this->down();
+            throw $e;
+        }
     }
+
 
     /**
      * Reverse the migrations.
@@ -54,8 +62,30 @@ class CreateUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user');
+        Schema::dropIfExists('admin_user');
     }
 
+
+    protected function seed()
+    {
+        $admin = [
+            'id' => 'admin',
+            'username' => 'admin',
+            'name' => '超级管理员',
+            'key' => 'admin#超级管理员',
+            'password' => sha1('admin'),
+            'type' => 2,
+        ];
+        $user = [
+            'id' => 'user',
+            'username' => 'user',
+            'name' => '普通管理员',
+            'key' => 'user#普通管理员',
+            'password' => sha1('user'),
+            'type' => 1,
+        ];
+        DB::table('admin_user')->insert($admin);
+        DB::table('admin_user')->insert($user);
+    }
 
 }
