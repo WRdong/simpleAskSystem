@@ -31,8 +31,8 @@ class ApiException extends Exception
     /**
      * ApiException constructor.
      * @param int $code
-     * @param string $msg
-     * @param null $data
+     * @param mixed $msg
+     * @param mixed $data
      * @param int $showType
      * @param Throwable $previous
      * @param int $httpCode
