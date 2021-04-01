@@ -11,10 +11,12 @@
 
 namespace App\Exceptions;
 
-
+use Exception;
 use App\Utils\Uuid;
+use Laravel\Lumen\Http\Request;
+use Psr\Log\LoggerInterface;
 
-class ApiException extends \Exception
+class ApiException extends Exception
 {
     protected $httpCode = 200;
     protected $httpHeaders = [];
@@ -62,11 +64,7 @@ class ApiException extends \Exception
 
     public function setData($data)
     {
-        if ($data === null) {
-            $this->data = new \stdClass();
-        } else {
-            $this->data = $data;
-        }
+        $this->data = $data;
         return $this;
     }
 
@@ -88,20 +86,65 @@ class ApiException extends \Exception
         return $this;
     }
 
-    public function getResponse()
+    public function getJsonResponse()
     {
-        return response([
-                'success' => false,
-                'errorCode' => $this->code,
-                'errorMessage' => $this->msg,
-                'data' => $this->data,
-                'showType' => $this->showType,
-                'traceId' => $this->traceId,
-            ],
-            $this->httpCode,
-            $this->httpHeaders
-        );
+        return [
+            'success' => false,
+            'errorCode' => $this->code,
+            'errorMessage' => $this->msg,
+            'data' => $this->data ?? new \stdClass() ,
+            'showType' => $this->showType,
+            'traceId' => $this->traceId,
+        ];
     }
+
+    /**
+     * 最后渲染 response
+     * @param Request $request
+     * @return \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory
+     */
+    public function render(Request $request)
+    {
+        $this->log($request);
+        if (config('app.debug')) {
+            $jsonResponse = $this->getJsonResponse();
+            $jsonResponse['file'] = $this->getFile();
+            $jsonResponse['line'] = $this->getLine();
+            return response($jsonResponse, $this->httpCode, $this->httpHeaders);
+        }
+        return response($this->getJsonResponse(), $this->httpCode, $this->httpHeaders);
+    }
+
+    /**
+     * 重写异常日志报告 // 不适用默认日志记录
+     * @throws Exception
+     */
+    public function report()
+    {
+    }
+
+    protected function log(Request $request)
+    {
+        try {
+            $logger = \Log::stack(['api_error']);
+        } catch (Exception $e) {
+            throw $e;
+        }
+        $logger->error($this->getMessage(), [
+            'traceId' => $this->traceId,
+            'errorCode' => $this->code,
+            'data' => $this->data,
+            'file' => $this->getFile(),
+            'line' => $this->getLine(),
+            'clientIp' => $request->getClientIp(),
+            'params' => $request->input(),
+            'url' => $request->url(),
+            'exception' => $this->showType == 2 ? $this : '',
+        ]);
+
+    }
+
+
 
 
 
