@@ -18,7 +18,9 @@ class CreateLogTable extends Migration
             $table->string('username', 40)->default('')->comment('用户名');
             $table->string('name', 50)->default('')->comment('姓名');
             $table->string('module', 50)->default('')->comment('模块');
+            $table->string('module_name', 50)->default('')->comment('模块名称');
             $table->string('action', 50)->default('')->comment('操作');
+            $table->string('action_name', 50)->default('')->comment('操作名称');
             $table->string('desc', 255)->comment('描述');
             $table->json('detail')->comment('详细描述');
             $table->ipAddress('ip')->comment('IP地址');
