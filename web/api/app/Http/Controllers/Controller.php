@@ -45,4 +45,16 @@ class Controller extends BaseController
     {
         throw new ApiException($e->getCode(), $e->getMsg(), $e->getData(), $showType, $e);
     }
+
+
+    /**
+     * 控制层 使用 ApiException 处理通用异常
+     * @param \Exception $e
+     * @param int $showType
+     * @throws ApiException
+     */
+    protected function throwException(\Exception $e, $showType = 0)
+    {
+        throw new ApiException($e->getCode(), $e->getMessage(), null, $showType, $e);
+    }
 }
