@@ -26,7 +26,7 @@ class ApiException extends Exception
     protected $msg;
     protected $data;
     protected $showType;
-
+    public $isPrevious = false;
 
     /**
      * ApiException constructor.
@@ -47,6 +47,9 @@ class ApiException extends Exception
         $this->showType = $showType;
         $this->httpCode = $httpCode;
         $this->httpHeaders = $headers;
+        if ($previous !== null) {
+            $this->isPrevious = true;
+        }
         parent::__construct($this->msg, $code, $previous);
     }
 
@@ -118,6 +121,10 @@ class ApiException extends Exception
             $jsonResponse = $this->getJsonResponse();
             $jsonResponse['file'] = $this->getFile();
             $jsonResponse['line'] = $this->getLine();
+            if ($this->isPrevious) {
+                $jsonResponse['preFile'] = $this->getPrevious()->getFile();
+                $jsonResponse['preLine'] = $this->getPrevious()->getLine();
+            }
             return response($jsonResponse, $this->httpCode, $this->httpHeaders);
         }
         return response($this->getJsonResponse(), $this->httpCode, $this->httpHeaders);
@@ -138,17 +145,24 @@ class ApiException extends Exception
         } catch (Exception $e) {
             throw $e;
         }
-        $logger->error($this->getMessage(), [
+        $log = [
             'traceId' => $this->traceId,
             'errorCode' => $this->code,
             'data' => $this->data,
-            'file' => $this->getFile(),
-            'line' => $this->getLine(),
             'clientIp' => $request->getClientIp(),
             'params' => $request->input(),
             'url' => $request->url(),
-            'exception' => $this->showType == 2 ? $this : '',
-        ]);
+            'file' => $this->getFile(),
+            'line' => $this->getLine(),
+        ];
+        if ($this->isPrevious) {
+            $log['preFile'] = $this->getPrevious()->getFile();
+            $log['preLine'] = $this->getPrevious()->getLine();
+        }
+        if ($this->showType == 2) {
+            $log['exception'] = $this;
+        }
+        $logger->error($this->msg, $log);
 
     }
 
