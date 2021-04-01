@@ -13,6 +13,7 @@ namespace App\Http\Controllers\Admin\Home;
 
 use App\Http\Controllers\Common\AdminController;
 use App\Logic\Admin\AdminUserLogic;
+use Carbon\Carbon;
 
 class CurrentUser extends AdminController
 {
@@ -23,6 +24,8 @@ class CurrentUser extends AdminController
         $params = $this->input();
         $logic = new AdminUserLogic();
         $ret = $logic->getUser('admin');
+        $this->log('user', 'view', '查看 用户 admin 信息');
+        $ret['now'] = Carbon::now()->toDateTimeString();
         return $this->json($ret);
     }
 

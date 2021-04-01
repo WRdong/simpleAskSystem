@@ -8,14 +8,31 @@
 namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\AdminLog;
 use App\Utils\Arr;
+use App\Utils\Uuid;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
 
+    protected $user;
 
+    protected $requestId;
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->init();
+    }
+
+    protected function init()
+    {
+        $this->requestId = Uuid::uuid32();
+//        $this->user = Auth::user();
+        $this->user = new \stdClass();
+    }
 
     /**
      * api 返回数据统一格式, 并将
@@ -48,4 +65,24 @@ class AdminController extends Controller
             ];
         }
     }
+
+    protected function log($module, $action, $desc = '', $detail = [])
+    {
+        $log = new AdminLog();
+        $log->id = $this->requestId;
+//        $log->username = $this->user->username;
+//        $log->name = $this->user->realname;
+        $log->username = 'test';
+        $log->name = '测试';
+        $log->module = $module;
+        $log->module_name = '测试 module';
+        $log->action = $action;
+        $log->action_name = '测试 action';
+        $log->desc = $desc;
+        $log->detail = json_encode($detail);
+        $log->ip = app()->request->getClientIp();
+        $log->save();
+    }
+
+
 }
