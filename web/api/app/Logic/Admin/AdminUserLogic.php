@@ -21,6 +21,7 @@ class AdminUserLogic extends AdminLogic
 
     public function getUser($id)
     {
+        throw new LogicException(-2);
         $user = AdminUser::find($id);
         if (empty($user)) {
             return [];
@@ -51,7 +52,13 @@ class AdminUserLogic extends AdminLogic
                 'label' => '杭州市',
             ]
         ];
-
+        $user['avatar'] = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
+        $user['email'] = 'antdesign@alipay.com';
+        $user['signature'] = '海纳百川，有容乃大';
+        $user['title'] = '交互专家';
+        $user['group'] = '蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED';
+        $user['address'] = '西湖区工专路 77 号';
+        $user['phone'] = '0752-268888888';
 
         return $user;
     }

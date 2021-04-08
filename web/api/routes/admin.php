@@ -16,4 +16,5 @@ $router->group(['namespace' => 'Admin', 'prefix' => '/api/admin'], function () u
     $router->group(['namespace' => 'Login', 'prefix' => 'user'], function() use ($router) {
         $router->post('/login', 'Login@run');
     });
+    Url
 });
